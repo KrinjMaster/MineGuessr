@@ -2,7 +2,7 @@
 
 **A minecraft world guess the location game!!**
 
-## At the moment development in early alpha stage.
+## At the moment development is in early alpha stage.
 **Stay tuned for updates!! 🥳**
 
 _Tasks to achieve:_<br/>
