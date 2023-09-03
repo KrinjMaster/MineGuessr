@@ -11,6 +11,7 @@
 			"/src/app.d.ts",
 		],
 		"sourceMap": true,
+		"importsNotUsedAsValues":"remove",
 		"strict": true
 	}
 }
