@@ -3,7 +3,9 @@ import { pb } from "./api";
 
 class LocationService {
   async getLocation(id: string): Promise<Location | undefined> {
-    return await pb.collection('locations').getOne(id);
+    return await pb.collection('locations').getOne(id, {
+      expand: 'nearbyLocations'
+    });
   }
   getImageUrl(filename: string, record: {
     [key: string]: any;

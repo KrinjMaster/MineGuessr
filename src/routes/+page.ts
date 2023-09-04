@@ -9,6 +9,7 @@ export const load = (async () => {
     if (result) {
       return {
         ...result,
+        nearbyLocations: result.expand.nearbyLocations,
         image: result.image.map((image) => locationService.getImageUrl(image, result)),
       };
     }
