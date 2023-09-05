@@ -2,6 +2,12 @@ import type { PageData } from "../routes/$types";
 import * as THREE from "three";
 
 export const RenderLocation = (location: PageData, scene: THREE.Scene) => {
+  const prevArrow = scene.getObjectByName("LocationMesh");
+
+  if (prevArrow) {
+    scene.remove(prevArrow);
+  }
+
   if (location.image) {
     const object = new THREE.Mesh(
       new THREE.BoxGeometry( 3, 3, 3 ),
@@ -14,6 +20,8 @@ export const RenderLocation = (location: PageData, scene: THREE.Scene) => {
         new THREE.MeshLambertMaterial( { map: new THREE.TextureLoader().load(location.image[0]), side: THREE.BackSide } ),
       ]
     );
+
+    object.name = "LocationMesh"
 
     scene.add( object );
   }

@@ -4,6 +4,11 @@ import type { NearbyLocation } from "../types/Locations";
 
 export const SVGRender = (locations: NearbyLocation[] | undefined, scene: THREE.Scene) => {
   const loader = new SVGLoader();
+  const prevArrow = scene.getObjectByName("arrow_group");
+
+  if (prevArrow) {
+    scene.remove(prevArrow);
+  }
 
   if (locations) {
     for (let i = 0; i < locations.length; i++) {
@@ -33,6 +38,7 @@ export const SVGRender = (locations: NearbyLocation[] | undefined, scene: THREE.
               const shape = shapes[ k ];
               const geometry = new THREE.ExtrudeGeometry( shape, extrudeSettings );
               const mesh = new THREE.Mesh( geometry, material );
+
               const rotateZ = locations[i].direction;
               const angle = ((rotateZ - 0.5) * 180 ) * Math.PI / 180;
               const x = Math.cos(angle) * 0.2;
@@ -53,13 +59,14 @@ export const SVGRender = (locations: NearbyLocation[] | undefined, scene: THREE.
               mesh.geometry.center();
 
               mesh.rotation.z = Math.PI * rotateZ;
-              
               mesh.rotation.x = Math.PI / 180 * 90;
     
               group.add( mesh );
             }
           }
-          
+
+          group.name = "arrow_group";
+
           scene.add(group);
         },
         function ( xhr ) {
