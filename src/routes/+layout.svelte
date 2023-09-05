@@ -1,5 +1,4 @@
 <script>
-  import { onMount } from "svelte"
   import "../styles/app.css";
   // import WebGL from 'three/addons/capabilities/WebGL.js';
   

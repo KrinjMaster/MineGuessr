@@ -2,8 +2,9 @@ import * as THREE from "three";
 import { SVGLoader } from 'three/examples/jsm/loaders/SVGLoader';
 import type { NearbyLocation } from "../types/Locations";
 
-export const RenderSVG = (scene: THREE.Scene, locations: NearbyLocation[] | undefined) => {
+export const SVGRender = (locations: NearbyLocation[] | undefined, scene: THREE.Scene) => {
   const loader = new SVGLoader();
+
   if (locations) {
     for (let i = 0; i < locations.length; i++) {
       loader.load(
@@ -37,11 +38,15 @@ export const RenderSVG = (scene: THREE.Scene, locations: NearbyLocation[] | unde
               const x = Math.cos(angle) * 0.2;
               const z = Math.sin(angle) * 0.2;
 
+              mesh.userData = locations[i]
+
+              mesh.name = 'arrow';
+
               mesh.scale.x = 0.01;
               mesh.scale.y = 0.01;
               mesh.scale.z = 0.01;
-    
-              mesh.position.y -= 0.2
+
+              mesh.position.y -= 0.2;
               mesh.position.x = x;
               mesh.position.z = z;
 

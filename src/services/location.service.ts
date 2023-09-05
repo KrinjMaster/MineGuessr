@@ -1,4 +1,4 @@
-import type { Location } from "../types/Locations";
+import type { Location, NearbyLocation } from "../types/Locations";
 import { pb } from "./api";
 
 class LocationService {
@@ -11,6 +11,11 @@ class LocationService {
     [key: string]: any;
   }) {
     return pb.files.getUrl(record, filename);
+  }
+  async getRandomLocation(): Promise<NearbyLocation[]> {
+    return await pb.collection('nearbyLocations').getFullList({
+      sort: '@random'
+    })
   }
 }
 

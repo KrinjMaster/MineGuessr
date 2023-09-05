@@ -2,15 +2,33 @@
   import { onMount } from 'svelte'
   import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'
   import * as THREE from "three";
-  import { RenderSVG } from '../utils/svgRender.js'
+  import { SVGRender } from '../utils/SVGRender.js'
+  import { invalidateAll } from '$app/navigation'
+  import { RenderLocation } from '../utils/RenderLocation.js'
 
   export let data;
+  $: locationData = data;
+
+  if (typeof window !== 'undefined' && data.id) {
+    localStorage.setItem('location', data.id);
+  }
+
+  let intersects: THREE.Intersection<THREE.Mesh<THREE.ExtrudeGeometry, THREE.MeshBasicMaterial>>[] | [] = [];
+  let hovered: THREE.Mesh<THREE.ExtrudeGeometry, THREE.MeshBasicMaterial> | null = null;
 
   const scene = new THREE.Scene();
+
+  $: if (typeof window !== 'undefined') {
+    hovered = null;
+    RenderLocation(locationData, scene);
+    SVGRender(locationData.nearbyLocations, scene);
+  }
   
   onMount(() => {
     const camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 0.1, 1000 );
     const renderer = new THREE.WebGLRenderer();
+    const raycaster = new THREE.Raycaster();
+    const mouse = new THREE.Vector2();
     
     renderer.setSize( window.innerWidth, window.innerHeight );
     document.body.appendChild( renderer.domElement );
@@ -24,28 +42,12 @@
     camera.position.set( 0, -0.5, 0 );
     
     scene.add( light );
-    
-    const render = () => {
-      if (data.image) {
-        const object = new THREE.Mesh(
-          new THREE.BoxGeometry( 3, 3, 3 ),
-          [
-            new THREE.MeshLambertMaterial( { map: new THREE.TextureLoader().load(data.image[3]), side: THREE.BackSide } ),
-            new THREE.MeshLambertMaterial( { map: new THREE.TextureLoader().load(data.image[1]), side: THREE.BackSide } ),
-            new THREE.MeshLambertMaterial( { map: new THREE.TextureLoader().load(data.image[4]), side: THREE.BackSide } ),
-            new THREE.MeshLambertMaterial( { map: new THREE.TextureLoader().load(data.image[5]), side: THREE.BackSide } ),
-            new THREE.MeshLambertMaterial( { map: new THREE.TextureLoader().load(data.image[2]), side: THREE.BackSide } ),
-            new THREE.MeshLambertMaterial( { map: new THREE.TextureLoader().load(data.image[0]), side: THREE.BackSide } ),
-          ]
-        );
 
-        scene.add( object );
-      }
-    }
+    const handleArrowClick = (object: THREE.Mesh) => {
+      localStorage.setItem("location", object.userData.locationId);
+      invalidateAll();
+    };
 
-    RenderSVG(scene, data.nearbyLocations);
-
-    render();
 
     document.addEventListener( 'wheel', (event) => {
       const scroll =  event.deltaY / 25;
@@ -62,6 +64,27 @@
       
       renderer.setSize( window.innerWidth, window.innerHeight );
     }, false );
+
+    window.addEventListener('mousemove', (e) => {
+      mouse.set((e.clientX / window.innerWidth) * 2 - 1, -(e.clientY / window.innerHeight) * 2 + 1)
+      raycaster.setFromCamera(mouse, camera)
+      intersects = raycaster.intersectObjects(scene.children, true)
+
+      if (hovered) {
+        hovered.material.color.set('white');
+      }
+
+      if (intersects[0].object.name === 'arrow') {
+        intersects[0].object.material.color.set('#ad69fa')
+        hovered = intersects[0].object;
+      }
+    })
+
+    window.addEventListener('click', (e) => {
+      if (intersects[0].object.name === 'arrow') {
+        handleArrowClick(intersects[0].object);
+      }
+    })
     
     function animate() {
       requestAnimationFrame( animate );
