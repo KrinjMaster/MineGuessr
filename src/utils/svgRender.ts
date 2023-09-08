@@ -4,11 +4,17 @@ import type { NearbyLocation } from "../types/Locations";
 
 export const SVGRender = (locations: NearbyLocation[] | undefined, scene: THREE.Scene) => {
   const loader = new SVGLoader();
-  const prevArrow = scene.getObjectByName("arrow_group");
-
-  if (prevArrow) {
-    scene.remove(prevArrow);
+  
+  if (locations) {
+    for (let i = 0; i < locations.length; i++) {
+      const prevArrow = scene.getObjectByName("arrow_group");
+      
+      if (prevArrow) {
+        scene.remove(prevArrow);
+      }
+    }
   }
+
 
   if (locations) {
     for (let i = 0; i < locations.length; i++) {

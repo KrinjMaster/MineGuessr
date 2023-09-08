@@ -21,7 +21,7 @@ export const load = (async () => {
     }
 
     const randomLoc = await locationService.getRandomLocation();
-    const result = await locationService.getLocation(randomLoc[Math.round(Math.random())].locationId)
+    const result = await locationService.getLocation(randomLoc[Math.round(Math.random())].locationId);
 
     if (result) {
       return {

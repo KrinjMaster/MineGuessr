@@ -1,14 +1,14 @@
-import type { PageData } from "../routes/$types";
 import * as THREE from "three";
+import type { PageData } from "../routes/testing/$types";
 
-export const RenderLocation = (location: PageData, scene: THREE.Scene) => {
+export const RenderLocation = (scene: THREE.Scene, location: PageData) => {
   const prevArrow = scene.getObjectByName("LocationMesh");
 
   if (prevArrow) {
     scene.remove(prevArrow);
   }
 
-  if (location.image) {
+  if (location && location.image) {
     const object = new THREE.Mesh(
       new THREE.BoxGeometry( 3, 3, 3 ),
       [

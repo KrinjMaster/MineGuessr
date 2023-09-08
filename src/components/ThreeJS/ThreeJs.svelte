@@ -1,18 +1,14 @@
 <script lang="ts">
   import { onMount } from 'svelte'
   import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'
-  import * as THREE from "three";
-  import { SVGRender } from '../../utils/SVGRender.js'
+  import * as THREE from "three"
+  import { SVGRender } from '../../utils/SVGRender.ts'
   import { invalidateAll } from '$app/navigation'
-  import { RenderLocation } from '../../utils/RenderLocation.js'
-  import type { PageData } from '../../routes/testing/$types.js'
+  import { RenderLocation } from '../../utils/RenderLocation.ts'
+  import { location } from '../../stores/location/store.ts'
 
-  export let data: PageData;
-
-  $: locationData = data;
-
-  if (typeof window !== 'undefined' && data.id) {
-    localStorage.setItem('location', data.id);
+  if (typeof window !== 'undefined' && $location && $location.id) {
+    localStorage.setItem('location', $location.id);
   }
 
   let intersects: THREE.Intersection<THREE.Mesh<THREE.ExtrudeGeometry, THREE.MeshBasicMaterial>>[] | [] = [];
@@ -20,13 +16,9 @@
 
   const scene = new THREE.Scene();
 
-  $: if (typeof window !== 'undefined') {
-    hovered = null;
-    console.log(scene)
-
-    
-    RenderLocation(locationData, scene);
-    SVGRender(locationData.nearbyLocations, scene);
+  $: if (typeof window !== 'undefined' && $location) {    
+    RenderLocation(scene, $location);
+    SVGRender($location.nearbyLocations, scene);
   }
   
   onMount(() => {
@@ -63,7 +55,6 @@
       }
     });
 
-    
     window.addEventListener( 'resize', () => {
       camera.aspect = window.innerWidth / window.innerHeight;
       camera.updateProjectionMatrix();
