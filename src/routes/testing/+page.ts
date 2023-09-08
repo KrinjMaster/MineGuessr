@@ -1,4 +1,4 @@
-import { locationService } from "../services/location.service";
+import { locationService } from "../../services/location.service";
 
 export const load = (async () => {
   try {

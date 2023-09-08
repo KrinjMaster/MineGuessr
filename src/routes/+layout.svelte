@@ -1,5 +1,6 @@
 <script>
   import "../styles/app.css";
+  import Header from "../components/UI/Header.svelte";
   // import WebGL from 'three/addons/capabilities/WebGL.js';
   
   // onMount(() => {
@@ -12,4 +13,5 @@
   // })
 </script>
 
+<Header/>
 <slot />
