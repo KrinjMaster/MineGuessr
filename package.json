@@ -26,6 +26,7 @@
 	"type": "module",
 	"dependencies": {
 		"pocketbase": "^0.17.3",
+		"theme-change": "^2.5.0",
 		"three": "^0.155.0",
 		"three-js": "^79.0.0"
 	}

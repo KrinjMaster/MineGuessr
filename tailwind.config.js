@@ -2,7 +2,19 @@
 export default {
   content: ['./src/**/*.{html,js,svelte,ts}'],
   theme: {
-    extend: {},
+    extend: {
+      animation: {
+        blob_pulse: 'blob_pulse 10s linear infinite',
+        blob_pulse2: 'blob_pulse 15s linear infinite',
+      },
+      keyframes: {
+        'blob_pulse': {
+          '0%': { transform: 'scale(1)' },
+          '50%': { transform: 'scale(0.8)' },
+          '100%': { transform: 'scale(1)' },
+        }
+      }
+    },
   },
   plugins: [require("daisyui")],
   daisyui: {
@@ -20,6 +32,7 @@ export default {
           "error": "#f04c83",
         },
       },
+      "light",
     ],
   },
 }
