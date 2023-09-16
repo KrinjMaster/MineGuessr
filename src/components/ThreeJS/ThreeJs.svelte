@@ -46,7 +46,7 @@
     };
     
 
-    document.addEventListener( 'wheel', (event) => {
+    document.getElementsByTagName('canvas').item(0)?.addEventListener( 'wheel', (event) => {
       const scroll =  event.deltaY / 25;
       
       if (camera.fov + scroll < 75 && camera.fov + scroll > 10) {
@@ -62,12 +62,10 @@
       renderer.setSize( window.innerWidth, window.innerHeight );
     }, false );
 
-    
-    window.addEventListener('mousemove', (e) => {
+    document.addEventListener('mousemove', (e) => {
       mouse.set((e.clientX / window.innerWidth) * 2 - 1, -(e.clientY / window.innerHeight) * 2 + 1)
       raycaster.setFromCamera(mouse, camera)
       intersects = raycaster.intersectObjects(scene.children, true)
-      
       
       if (hovered) {
         hovered.material.color.set(1,1,1);
