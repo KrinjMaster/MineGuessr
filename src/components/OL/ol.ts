@@ -1,4 +1,4 @@
-import {Feature, Map, MapBrowserEvent, View} from 'ol';
+import {Feature, Map, MapBrowserEvent, Tile, View} from 'ol';
 import Projection from 'ol/proj/Projection.js';
 import TileLayer from 'ol/layer/Tile';
 import XYZ from 'ol/source/XYZ'
@@ -10,6 +10,7 @@ import Vector from 'ol/source/Vector';
 import Icon from 'ol/style/Icon';
 import Style from 'ol/style/Style';
 import VectorLayer from 'ol/layer/Vector';
+import TileDebug from 'ol/source/TileDebug.js';
 interface MarkersCFG {
   isEnabled: boolean;
   markers: {
@@ -27,15 +28,15 @@ const customMarkers: MarkersCFG = {
 }
 
 const options = {
-  minZoom: -6,
-  maxZoom: 0,
+  minZoom: 0,
+  maxZoom: 2,
   defaultZoom: 0,
   imageFormat: "jpeg",
-  minRegionX: -2,
-  minRegionZ: -2,
-  maxRegionX: 1,
-  maxRegionZ: 1,
-  worldName: "World",
+  minRegionX: -4,
+  minRegionZ: -4,
+  maxRegionX: 3,
+  maxRegionZ: 3,
+  worldName: "SP1",
   background: "",
   markers: customMarkers,
 }
@@ -117,56 +118,68 @@ const OLmap = (id: string, regions: any) => {
             };
 
             const hasTile = function () {
-                const tileRegionPoint = {
-                    x: Math.floor(tileBlockPoint.x / 512),
-                    z: Math.floor(tileBlockPoint.z / 512)
-                };
-                const tileRegionSize = Math.ceil(tileBlockSize / 512);
+              const tileRegionPoint = {
+                x: Math.floor(tileBlockPoint.x / 512),
+                z: Math.floor(tileBlockPoint.z / 512)
+              };
+              const tileRegionSize = Math.ceil(tileBlockSize / 512);
 
-                for (let x = tileRegionPoint.x; x < tileRegionPoint.x + tileRegionSize; x++) {
-                    for (let z = tileRegionPoint.z; z < tileRegionPoint.z + tileRegionSize; z++) {
-                        const group = {
-                            x: Math.floor(x / 32),
-                            z: Math.floor(z / 32)
-                        };
-                        const regionMap = regions.find((e: any) => e.x == group.x && e.z == group.z);
-                        if (regionMap) {
-                            const relX = x - group.x * 32;
-                            const relZ = z - group.z * 32;
-                            const inx = relZ * 32 + relX;
-                            const b = regionMap.m[Math.floor(inx / 32)];
-                            const bit = inx % 32;
-                            const found = (b & (1 << bit)) != 0;
-                            if (found) return true;
-                        }
-                    }
+              for (let x = tileRegionPoint.x; x < tileRegionPoint.x + tileRegionSize; x++) {
+                for (let z = tileRegionPoint.z; z < tileRegionPoint.z + tileRegionSize; z++) {
+                  const group = {
+                    x: Math.floor(x / 32),
+                    z: Math.floor(z / 32)
+                  };
+                  const regionMap = regions.find((e: any) => e.x == group.x && e.z == group.z);
+                  if (regionMap) {
+                    const relX = x - group.x * 32;
+                    const relZ = z - group.z * 32;
+                    const inx = relZ * 32 + relX;
+                    const b = regionMap.m[Math.floor(inx / 32)];
+                    const bit = inx % 32;
+                    const found = (b & (1 << bit)) != 0;
+                    if (found) return true;
+                  }
                 }
-                return false;
+              }
+              return false;
             };
 
             if (tileX >= minTileX
-                && tileY >= minTileY
-                && tileX <= maxTileX
-                && tileY <= maxTileY
-                && hasTile()) {
-                const url = ('/src/tiles/zoom.{z}/{xd}/{yd}/tile.{x}.{y}.' + options.imageFormat)
-                    .replace('{z}', worldZoom.toString())
-                    .replace('{yd}', Math.floor(tileY / 10).toString())
-                    .replace('{xd}', Math.floor(tileX / 10).toString())
-                    .replace('{y}', tileY.toString())
-                    .replace('{x}', tileX.toString());
-                return url;
+              && tileY >= minTileY
+              && tileX <= maxTileX
+              && tileY <= maxTileY
+              && hasTile()) {
+              const url = ('/src/tiles/sp1/zoom.{z}/{xd}/{yd}/tile.{x}.{y}.' + options.imageFormat)
+                .replace('{z}', worldZoom.toString())
+                .replace('{yd}', Math.floor(tileY / 10).toString())
+                .replace('{xd}', Math.floor(tileX / 10).toString())
+                .replace('{y}', tileY.toString())
+                .replace('{x}', tileX.toString());
+              return url;
             }
             else
-                return undefined;
-        }
+              return undefined;
+          }
         }),
       }),
+      // new TileLayer({
+      //   source: new TileDebug ({
+      //     tileGrid: tileGrid,
+      //     projection: viewProjection
+      //   })
+      // })
     ],
     view: new View({
       center: [0, 0],
-      zoom: 18,
-      maxZoom: 20,
+      extent: mapExtent,
+      projection: viewProjection,
+      resolutions: tileGrid.getResolutions(),
+      maxZoom: mapZoomLevels,
+      zoom: mapZoomLevels - options.maxZoom,
+      constrainResolution: true,
+      showFullExtent: true,
+      constrainOnlyCenter: true
     })
   });
 
@@ -179,16 +192,16 @@ const OLmap = (id: string, regions: any) => {
         const latitude = item.z;
 
         const feature = new Feature({
-            geometry: new Point(transform([longitude, latitude], dataProjection, viewProjection))
+          geometry: new Point(transform([longitude, latitude], dataProjection, viewProjection))
         });
 
         const style = new Style();
         if (item.image)
-            style.setImage(new Icon({
-                src: item.image,
-                anchor: item.imageAnchor,
-                scale: item.imageScale
-            }));
+          style.setImage(new Icon({
+            src: item.image,
+            anchor: item.imageAnchor,
+            scale: item.imageScale
+          }));
 
         feature.setStyle(style);
 

@@ -32,6 +32,8 @@
     
     const controls = new OrbitControls( camera, renderer.domElement );
     controls.enableZoom = false;
+    controls.enablePan = false;
+    controls.rotateSpeed = 0.25;
     
     const light = new THREE.AmbientLight( 'white', 2 );
     
@@ -45,16 +47,18 @@
       invalidateAll();
     };
     
-
+    
     document.getElementsByTagName('canvas').item(0)?.addEventListener( 'wheel', (event) => {
-      const scroll =  event.deltaY / 25;
+      const scroll = event.deltaY / 25;
       
       if (camera.fov + scroll < 75 && camera.fov + scroll > 10) {
         camera.fov += scroll
+        controls.rotateSpeed = camera.fov / 225
+        console.log(controls.rotateSpeed)
         camera.updateProjectionMatrix();
       }
     });
-
+    
     window.addEventListener( 'resize', () => {
       camera.aspect = window.innerWidth / window.innerHeight;
       camera.updateProjectionMatrix();
