@@ -5,7 +5,7 @@ import type { NearbyLocation } from "../types/Locations";
 export const SVGRender = (locations: NearbyLocation[] | undefined, scene: THREE.Scene) => {
   const loader = new SVGLoader();
   
-  if (locations) {
+  if (locations && locations[0] !== undefined) {
     for (let i = 0; i < locations.length; i++) {
       const prevArrow = scene.getObjectByName("arrow_group");
       

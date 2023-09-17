@@ -11,24 +11,25 @@ export const load = (async () => {
         if (result) {
           return {
             ...result,
-            nearbyLocations: result.expand.nearbyLocations,
+            nearbyLocations: result.expand ? result.expand.nearbyLocations : [],
             image: result.image.map((image) => locationService.getImageUrl(image, result)),
           };
         }
       } else {
        console.log("No location found");
       }
-    }
-
-    const randomLoc = await locationService.getRandomLocation();
-    const result = await locationService.getLocation(randomLoc[Math.round(Math.random())].locationId);
-
-    if (result) {
-      return {
-        ...result,
-        nearbyLocations: result.expand.nearbyLocations,
-        image: result.image.map((image) => locationService.getImageUrl(image, result)),
-      };
+    } else {
+      const randomLoc = await locationService.getRandomLocation();
+  
+      const result = await locationService.getLocation(randomLoc[Math.ceil(Math.random() * 4)].id);
+  
+      if (result) {
+        return {
+          ...result,
+          nearbyLocations: result.expand ? result.expand.nearbyLocations : [],
+          image: result.image.map((image) => locationService.getImageUrl(image, result)),
+        };
+      }
     }
   } catch (error) {
     console.log(error);

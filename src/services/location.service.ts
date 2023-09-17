@@ -3,7 +3,7 @@ import { pb } from "./api";
 
 class LocationService {
   async getLocation(id: string): Promise<Location | undefined> {
-    return await pb.collection('locations').getOne(id, {
+    return await pb.collection('sp1_locations').getOne(id, {
       expand: 'nearbyLocations'
     });
   }
@@ -13,7 +13,7 @@ class LocationService {
     return pb.files.getUrl(record, filename);
   }
   async getRandomLocation(): Promise<NearbyLocation[]> {
-    return await pb.collection('nearbyLocations').getFullList({
+    return await pb.collection('sp1_locations').getFullList({
       sort: '@random'
     })
   }

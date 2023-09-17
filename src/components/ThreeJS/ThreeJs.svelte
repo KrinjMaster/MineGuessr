@@ -16,9 +16,11 @@
 
   const scene = new THREE.Scene();
 
-  $: if (typeof window !== 'undefined' && $location) {    
+  $: if (typeof window !== 'undefined' && $location?.nearbyLocations) {    
     RenderLocation(scene, $location);
-    SVGRender($location.nearbyLocations, scene);
+    if ($location?.nearbyLocations[0] !== undefined){
+      SVGRender($location.nearbyLocations, scene);
+    }
   }
   
   onMount(() => {
@@ -47,7 +49,6 @@
       invalidateAll();
     };
     
-    
     document.getElementsByTagName('canvas').item(0)?.addEventListener( 'wheel', (event) => {
       const scroll = event.deltaY / 25;
       
@@ -75,7 +76,7 @@
         hovered.material.color.set(1,1,1);
       }
       
-      if (intersects[0].object.name === 'arrow') {
+      if (intersects[0] && intersects[0].object.name === 'arrow') {
         intersects[0].object.material.color.set('#ad69fa')
         hovered = intersects[0].object;
       }

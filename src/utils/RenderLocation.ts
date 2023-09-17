@@ -10,7 +10,7 @@ export const RenderLocation = (scene: THREE.Scene, location: PageData) => {
 
   if (location && location.image) {
     const object = new THREE.Mesh(
-      new THREE.BoxGeometry( 3, 3, 3 ),
+      new THREE.BoxGeometry( 5, 5, 5 ),
       [
         new THREE.MeshLambertMaterial( { map: new THREE.TextureLoader().load(location.image[3]), side: THREE.BackSide } ),
         new THREE.MeshLambertMaterial( { map: new THREE.TextureLoader().load(location.image[1]), side: THREE.BackSide } ),
@@ -22,6 +22,7 @@ export const RenderLocation = (scene: THREE.Scene, location: PageData) => {
     );
 
     object.name = "LocationMesh"
+    object.scale.x = -1;
 
     scene.add( object );
   }
