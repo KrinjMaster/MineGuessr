@@ -40,7 +40,7 @@
     const light = new THREE.AmbientLight( 'white', 2 );
     
     controls.target.set( 0, 0, 0 );
-    camera.position.set( 0, -0.5, 0 );
+    camera.position.set( 0.5, 0, 0 );
     
     scene.add( light );
     

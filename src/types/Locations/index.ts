@@ -4,6 +4,10 @@ export interface Location {
   };
   id: string;
   image: string[];
+  cords: {
+    x: number;
+    z: number;  
+  };
   nearbyLocations: NearbyLocation[];
 }
 

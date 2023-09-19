@@ -1,31 +1,23 @@
-import {Feature, Map, MapBrowserEvent, Tile, View} from 'ol';
+import {Feature, Map, View} from 'ol';
 import Projection from 'ol/proj/Projection.js';
 import TileLayer from 'ol/layer/Tile';
 import XYZ from 'ol/source/XYZ'
 import TileGrid from 'ol/tilegrid/TileGrid';
 import { boundingExtent } from 'ol/extent';
 import { addCoordinateTransforms, transform } from 'ol/proj';
-import { Point } from 'ol/geom';
+import { LineString, Point } from 'ol/geom';
 import Vector from 'ol/source/Vector';
 import Icon from 'ol/style/Icon';
 import Style from 'ol/style/Style';
 import VectorLayer from 'ol/layer/Vector';
-import TileDebug from 'ol/source/TileDebug.js';
-interface MarkersCFG {
-  isEnabled: boolean;
-  markers: {
-    x: number;
-    z: number;
-    image: string;
-    imageAnchor: number[];
-    imageScale: number;
-  }[]
-}
+import { olConfig } from '../../stores/ol/store.ts';
+import { get } from 'svelte/store'
+import type { Marker } from './ol.ts';
+import { location } from '../../stores/location/store.ts';
+import type { PageData } from '../../routes/testing/$types';
 
-const customMarkers: MarkersCFG = {
-  isEnabled: true,
-  markers: []
-}
+const OlConfig = get(olConfig)
+const Location = get(location)
 
 const options = {
   minZoom: 0,
@@ -38,12 +30,25 @@ const options = {
   maxRegionZ: 3,
   worldName: "SP1",
   background: "",
-  markers: customMarkers,
+  markers: OlConfig,
 }
 
-const OLmap = (id: string, regions: any) => {
-  const dpiScale = window.devicePixelRatio ?? 1.0;
 
+const ResultOLmap = (id: string, regions: any, location: PageData | null) => {
+  if (OlConfig && location && location.cords) {
+    const expandedMarkers = [...OlConfig.markers, {
+      x: location.cords.x,
+      z: location.cords.z,
+      image: "/src/lib/icons/flag.png",
+      imageAnchor: [0.5, 1],
+      imageScale: 0.5,
+    }]
+  
+    OlConfig.markers = expandedMarkers;
+  }
+
+  const dpiScale = window.devicePixelRatio ?? 1.0;
+  
   const worldMinX = options.minRegionX * 512;
   const worldMinY = options.minRegionZ * 512;
   const worldWidth = (options.maxRegionX + 1 - options.minRegionX) * 512;
@@ -163,12 +168,6 @@ const OLmap = (id: string, regions: any) => {
           }
         }),
       }),
-      // new TileLayer({
-      //   source: new TileDebug ({
-      //     tileGrid: tileGrid,
-      //     projection: viewProjection
-      //   })
-      // })
     ],
     view: new View({
       center: [0, 0],
@@ -183,7 +182,7 @@ const OLmap = (id: string, regions: any) => {
     })
   });
 
-  const createMarkersLayer = (markers: any, dataProjection: any, viewProjection: any) => {
+  const createMarkersLayer = (markers: Marker[], dataProjection: Projection, viewProjection: any) => {
     const features = [];
 
     for (let i = 0; i < markers.length; i++) {
@@ -196,12 +195,14 @@ const OLmap = (id: string, regions: any) => {
         });
 
         const style = new Style();
-        if (item.image)
+
+        if (item.image) {
           style.setImage(new Icon({
             src: item.image,
             anchor: item.imageAnchor,
             scale: item.imageScale
           }));
+        }
 
         feature.setStyle(style);
 
@@ -218,31 +219,34 @@ const OLmap = (id: string, regions: any) => {
 
     return vectorLayer;
   }
+
+  // if (OlConfig?.markers) {
+  //   const guess = new Point([OlConfig?.markers[0].x, OlConfig?.markers[0].z]);
+  //   const loc = new Point([OlConfig?.markers[1].x, OlConfig?.markers[1].x]);
   
-  map.on('click', function(evt){
-    map.getLayers().forEach(layer => {
-      if (layer.get('name') && layer.get('name') == 'guess_marker'){
-        console.log('remove')
-          map.removeLayer(layer)
-      }
-    });
-    
-    customMarkers.markers[0] = {
-      x: evt.coordinate[0],
-      z: -evt.coordinate[1],
-      image: "/src/lib/icons/custom.pin.png",
-      imageAnchor: [0.5, 1],
-      imageScale: 0.5,
-    }
+  //   const line = new LineString([guess.getCoordinates(), loc.getCoordinates()]);
+  
+  //   const vector = new Vector({
+  //     features: [new Feature(line)],
+  //   });
 
-    const markersLayer = createMarkersLayer(customMarkers.markers, dataProjection, viewProjection);
+  //   const vectorLayer = new VectorLayer({
+  //     source: vector
+  //   });
 
-    markersLayer.set('name', 'guess_marker');
+  //   map.addLayer(vectorLayer);
+  // }
+  
+  if (OlConfig?.markers) {
+    console.log(OlConfig.markers)
+    const markersLayer = createMarkersLayer(OlConfig.markers, dataProjection, viewProjection);
+
+    markersLayer.set('name', 'markers');
 
     map.addLayer(markersLayer);
-  })
+  }
 
   return map;
 }
 
-export default OLmap;
+export default ResultOLmap;
