@@ -4,7 +4,7 @@ import TileLayer from 'ol/layer/Tile';
 import XYZ from 'ol/source/XYZ'
 import TileGrid from 'ol/tilegrid/TileGrid';
 import { boundingExtent } from 'ol/extent';
-import { addCoordinateTransforms, transform } from 'ol/proj';
+import { addCoordinateTransforms, fromLonLat, transform } from 'ol/proj';
 import { LineString, Point } from 'ol/geom';
 import Vector from 'ol/source/Vector';
 import Icon from 'ol/style/Icon';
@@ -15,9 +15,10 @@ import { get } from 'svelte/store'
 import type { Marker } from './ol.ts';
 import { location } from '../../stores/location/store.ts';
 import type { PageData } from '../../routes/testing/$types';
+import Stroke from 'ol/style/Stroke';
+import Fill from 'ol/style/Fill';
 
 const OlConfig = get(olConfig)
-const Location = get(location)
 
 const options = {
   minZoom: 0,
@@ -170,7 +171,7 @@ const ResultOLmap = (id: string, regions: any, location: PageData | null) => {
       }),
     ],
     view: new View({
-      center: [0, 0],
+      center: OlConfig?.markers ? fromLonLat([OlConfig?.markers[0].x, -OlConfig?.markers[0].z], viewProjection) : [0, 0],
       extent: mapExtent,
       projection: viewProjection,
       resolutions: tileGrid.getResolutions(),
@@ -220,25 +221,36 @@ const ResultOLmap = (id: string, regions: any, location: PageData | null) => {
     return vectorLayer;
   }
 
-  // if (OlConfig?.markers) {
-  //   const guess = new Point([OlConfig?.markers[0].x, OlConfig?.markers[0].z]);
-  //   const loc = new Point([OlConfig?.markers[1].x, OlConfig?.markers[1].x]);
+  if (OlConfig?.markers) {
+    const guess = new Point([OlConfig?.markers[0].x, -OlConfig?.markers[0].z]);
+    const loc = new Point([OlConfig?.markers[1].x, -OlConfig?.markers[1].z]);
   
-  //   const line = new LineString([guess.getCoordinates(), loc.getCoordinates()]);
-  
-  //   const vector = new Vector({
-  //     features: [new Feature(line)],
-  //   });
+    const line = new LineString([loc.getCoordinates(),guess.getCoordinates()]);
 
-  //   const vectorLayer = new VectorLayer({
-  //     source: vector
-  //   });
+    const style = new Style({
+      fill: new Fill({
+        color: [255, 255, 255, 255]
+      }),
+      stroke: new Stroke({
+        color: [255, 255, 255, 255],
+        width: 5,
+        lineCap: 'round'
+      })
+    });
 
-  //   map.addLayer(vectorLayer);
-  // }
+    const vector = new Vector({
+      features: [new Feature(line)],
+    });
+
+    const vectorLayer = new VectorLayer({
+      source: vector,
+      style: style,
+    });
+
+    map.addLayer(vectorLayer);
+  }
   
   if (OlConfig?.markers) {
-    console.log(OlConfig.markers)
     const markersLayer = createMarkersLayer(OlConfig.markers, dataProjection, viewProjection);
 
     markersLayer.set('name', 'markers');
