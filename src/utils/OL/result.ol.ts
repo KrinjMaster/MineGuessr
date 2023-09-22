@@ -14,7 +14,7 @@ import { olConfig } from '../../stores/ol/store.ts';
 import { get } from 'svelte/store'
 import type { Marker } from './ol.ts';
 import { location } from '../../stores/location/store.ts';
-import type { PageData } from '../../routes/testing/$types';
+import type { PageData } from '../../routes/[mapId]/$types.d.ts';
 import Stroke from 'ol/style/Stroke';
 import Fill from 'ol/style/Fill';
 

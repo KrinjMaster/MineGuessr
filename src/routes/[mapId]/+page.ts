@@ -1,12 +1,12 @@
 import { locationService } from "../../services/location.service";
 
-export const load = (async () => {
+export const load = (async ({ params }) => {
   try {
     if (typeof window !== 'undefined') {
       const location = localStorage.getItem('location')
 
       if (location) {
-        const result = await locationService.getLocation(location)
+        const result = await locationService.getLocation(location, params.mapId);
         
         if (result) {
           return {
@@ -21,7 +21,7 @@ export const load = (async () => {
     } else {
       const randomLoc = await locationService.getRandomLocation();
   
-      const result = await locationService.getLocation(randomLoc[Math.ceil(Math.random() * 4)].id);
+      const result = await locationService.getLocation(randomLoc[Math.ceil(Math.random() * 4)].id, params.mapId);
   
       if (result) {
         return {

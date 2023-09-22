@@ -6,10 +6,11 @@
   import { olConfig, setOlConfig } from '../../stores/ol/store.ts'
   import { location } from '../../stores/location/store.ts'
   import type { Marker } from '../../utils/OL/ol.ts'
-  import type { PageData } from '../../routes/testing/$types'
+  import type { PageData } from '../../routes/[mapId]/$types'
   import { LineString, Point } from 'ol/geom'
   import { getLength } from 'ol/sphere'
   import { setGameParams, gameParams } from '../../stores/params/store.ts'
+  import { t } from '../../lib/lang';
 
   onMount(() => {
     OLmap('map', Regions);
@@ -29,5 +30,5 @@
 
 <div class="absolute flex flex-col gap-2.5 bottom-0 right-0 h-96 w-96 p-2.5 hover:h-[35rem] hover:w-[35rem] transition-all duration-150 ease-linear z-[100]">
   <div id="map" class="w-full h-full bg-white"></div>
-  <button class="btn btn-secondary" on:click={() => handleGuessLocation($olConfig?.markers[0], $location)}>Take a guess!</button>
+  <button class="btn btn-secondary" on:click={() => handleGuessLocation($olConfig?.markers[0], $location)}>{$t('game.guess-button')}</button>
 </div>

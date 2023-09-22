@@ -2,8 +2,8 @@ import type { Location, NearbyLocation } from "../types/Locations";
 import { pb } from "./api";
 
 class LocationService {
-  async getLocation(id: string): Promise<Location | undefined> {
-    return await pb.collection('sp1_locations').getOne(id, {
+  async getLocation(id: string, collection: string): Promise<Location | undefined> {
+    return await pb.collection(`${collection}_locations`).getOne(id, {
       expand: 'nearbyLocations'
     });
   }

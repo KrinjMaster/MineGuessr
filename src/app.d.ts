@@ -12,4 +12,8 @@ declare module "*.svg" {
   export default content;
 }
 
+declare module '$lib/lang' {
+
+}
+
 export { };

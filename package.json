@@ -27,6 +27,7 @@
 	"dependencies": {
 		"ol": "^8.1.0",
 		"pocketbase": "^0.17.3",
+		"sveltekit-i18n": "^2.4.2",
 		"theme-change": "^2.5.0",
 		"three": "^0.155.0",
 		"three-js": "^79.0.0"
