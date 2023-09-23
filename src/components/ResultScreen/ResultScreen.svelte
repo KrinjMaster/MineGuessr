@@ -6,8 +6,18 @@
   import { location } from "../../stores/location/store.ts"
   import { t } from '../../lib/lang'
 
+  let isShown = false;
+
   onMount(() => {
-    ResultOLmap('map', Regions, $location)
+    if ($gameParams.round && $gameParams.totalRounds && $gameParams.isGuessed) {
+      if ($gameParams.round + 1 <= $gameParams.totalRounds) {
+        isShown = true;
+      } else {
+        isShown = false;
+      }
+
+      ResultOLmap('map', Regions, $location)
+    }
   })
 </script>
 
@@ -15,4 +25,7 @@
   <div id="map" class="w-1/2 h-96 bg-white"></div>
   <h1 class="text-8xl">{$t('game.result-title')}</h1>
   <h2 class="text-8xl">{$gameParams.distance} {$t('game.result-subheader')}</h2>
+  {#if isShown}
+    <button class="btn btn-secondary">Continue</button>
+  {/if}
 </section>

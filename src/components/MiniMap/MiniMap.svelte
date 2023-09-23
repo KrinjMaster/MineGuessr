@@ -3,7 +3,7 @@
   import { onMount } from 'svelte'
   import OLmap from '../../utils/OL/ol.ts'
   import { Regions } from '../../utils/OL/ol.regions.ts'
-  import { olConfig, setOlConfig } from '../../stores/ol/store.ts'
+  import { olConfig } from '../../stores/ol/store.ts'
   import { location } from '../../stores/location/store.ts'
   import type { Marker } from '../../utils/OL/ol.ts'
   import type { PageData } from '../../routes/[mapId]/$types'
@@ -24,11 +24,12 @@
       const line = new LineString([guess.getCoordinates(), loc.getCoordinates()]);
 
       setGameParams({ ...$gameParams, isGuessed: true, distance: Math.round(getLength(line)) })
-      }
     }
+  }
 </script>
 
 <div class="absolute flex flex-col gap-2.5 bottom-0 right-0 h-96 w-96 p-2.5 hover:h-[35rem] hover:w-[35rem] transition-all duration-150 ease-linear z-[100]">
+  <h1 class="w-full text-right text-2xl text-white font-bold">Round {$gameParams.round} / {$gameParams.totalRounds}</h1>
   <div id="map" class="w-full h-full bg-white"></div>
   <button class="btn btn-secondary" on:click={() => handleGuessLocation($olConfig?.markers[0], $location)}>{$t('game.guess-button')}</button>
 </div>

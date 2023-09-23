@@ -55,7 +55,7 @@
       if (camera.fov + scroll < 75 && camera.fov + scroll > 10) {
         camera.fov += scroll
         controls.rotateSpeed = camera.fov / 225
-        console.log(controls.rotateSpeed)
+
         camera.updateProjectionMatrix();
       }
     });
@@ -83,8 +83,10 @@
     })
     
     window.addEventListener('click', () => {
-      if (intersects[0].object.name === 'arrow') {
-        handleArrowClick(intersects[0].object);
+      if (intersects[0]) {
+        if (intersects[0].object.name === 'arrow') {
+          handleArrowClick(intersects[0].object);
+        }
       }
     })
     
