@@ -16,12 +16,18 @@ export const load = (async ({ params }) => {
           };
         }
       } else {
-       console.log("No location found");
+        const result = (await locationService.getRandomLocation(params.mapId))[Math.ceil(Math.random() * 3)];
+  
+        if (result) {
+          return {
+            ...result,
+            nearbyLocations: result.expand ? result.expand.nearbyLocations : [],
+            image: result.image.map((image) => locationService.getImageUrl(image, result)),
+          };
+        }
       }
     } else {
-      const randomLoc = await locationService.getRandomLocation();
-  
-      const result = await locationService.getLocation(randomLoc[Math.ceil(Math.random() * 4)].id, params.mapId);
+      const result = (await locationService.getRandomLocation(params.mapId))[Math.ceil(Math.random() * 3)];
   
       if (result) {
         return {

@@ -12,6 +12,7 @@ import Style from 'ol/style/Style';
 import VectorLayer from 'ol/layer/Vector';
 import { olConfig } from '../../stores/ol/store.ts';
 import { get } from 'svelte/store'
+import type { Region } from './ol.regions'
 
 export interface Marker {
   x: number;
@@ -43,7 +44,7 @@ const options = {
   markers: OlConfig,
 }
 
-const OLmap = (id: string, regions: any) => {
+const OLmap = (id: string, regions: Region[]) => {
   const dpiScale = window.devicePixelRatio ?? 1.0;
 
   const worldMinX = options.minRegionX * 512;

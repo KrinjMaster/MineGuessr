@@ -3,27 +3,39 @@
   import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'
   import * as THREE from "three"
   import { SVGRender } from '../../utils/SVGRender.ts'
-  import { invalidateAll } from '$app/navigation'
   import { RenderLocation } from '../../utils/RenderLocation.ts'
-  import { location } from '../../stores/location/store.ts'
-
-  if (typeof window !== 'undefined' && $location && $location.id) {
-    localStorage.setItem('location', $location.id);
-  }
+  import { isLocationFetched, location, setNewLocation } from '../../stores/location/store.ts'
+  import { gameParams } from '../../stores/params/store.ts'
+  import type { PageData } from '../../routes/[mapId]/$types'
 
   let intersects: THREE.Intersection<THREE.Mesh<THREE.ExtrudeGeometry, THREE.MeshBasicMaterial>>[] | [] = [];
   let hovered: THREE.Mesh<THREE.ExtrudeGeometry, THREE.MeshBasicMaterial> | null = null;
 
   const scene = new THREE.Scene();
 
-  $: if (typeof window !== 'undefined' && $location?.nearbyLocations) {    
-    RenderLocation(scene, $location);
-    if ($location?.nearbyLocations[0] !== undefined){
-      SVGRender($location.nearbyLocations, scene);
+  const RenderScene = (scene: THREE.Scene, location: PageData) => {
+    RenderLocation(scene, location);
+
+    if (location.nearbyLocations && location.nearbyLocations.length > 0) {
+      SVGRender(location.nearbyLocations, scene);
+    }
+  }
+  
+  $: if ($isLocationFetched) {
+    if ($location && $isLocationFetched) {
+      console.log('render2', $location.id)
+      RenderScene(scene, $location);
+      
+      isLocationFetched.set(false);
     }
   }
   
   onMount(() => {
+    if ($location && $location.id) {
+      console.log('render1', $location.id, scene.children)
+      RenderScene(scene, $location);
+    }
+
     const camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 0.1, 1000 );
     const renderer = new THREE.WebGLRenderer();
     const raycaster = new THREE.Raycaster();
@@ -45,8 +57,9 @@
     scene.add( light );
     
     const handleArrowClick = (object: THREE.Mesh) => {
-      localStorage.setItem("location", object.userData.locationId);
-      invalidateAll();
+      if ($gameParams.map) {
+        setNewLocation(object.userData.locationId, $gameParams.map);
+      }
     };
     
     document.getElementsByTagName('canvas').item(0)?.addEventListener( 'wheel', (event) => {

@@ -3,7 +3,11 @@
 <!-- svelte-ignore a11y-no-noninteractive-tabindex -->
 
 <script lang="ts">
-  import { t, locale, locales, setLocale  } from '../../lib/lang';
+  import { onMount } from 'svelte'
+  import { t, locales, setLocale  } from '../../../lib/lang';
+  import { gameParams } from '../../../stores/params/store'
+
+  let isHUDShown = false;
 
   const handleChange = ({ currentTarget }: {
     currentTarget: {
@@ -14,10 +18,35 @@
     setLocale(value);
     document.cookie = `lang=${value} ; HttpOnly; Secure; SameSite=lax`;
   };
+
+  onMount(() => {
+    if ($gameParams.round) {
+      isHUDShown = true;
+    } else {
+      isHUDShown = false;
+    }
+  })
+
 </script>
 
 <div class="navbar flex items-center justify-between bg-base-100 bg-opacity-25 fixed backdrop-blur-3xl text-white px-5">
   <a class="font-extrabold text-3xl" href="/">MineGuessr</a>
+  {#if $gameParams.round}
+    <div class="flex gap-3.5 font-bold">
+      <div class="flex flex-col items-center">
+        <h1>Map</h1>
+        <p>#{$gameParams.map?.toUpperCase()}</p>
+      </div>
+      <div class="flex flex-col items-center">
+        <h1>Round</h1>
+        <p>{$gameParams.round}/{$gameParams.totalRounds}</p>
+      </div>
+      <div class="flex flex-col items-center">
+        <h1>Points</h1>
+        <p>1000</p>
+      </div>
+    </div>
+  {/if}
   <div class="flex gap-2.5">
     <div class="dropdown dropdown-hover dropdown-end">
       <label tabindex="0" class="m-1 btn btn-secondary btn-outline">

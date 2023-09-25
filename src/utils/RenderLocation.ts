@@ -1,5 +1,5 @@
 import * as THREE from "three";
-import type { PageData } from "../routes/testing/$types";
+import type { PageData } from "../routes/[mapId]/$types";
 
 export const RenderLocation = (scene: THREE.Scene, location: PageData) => {
   const prevArrow = scene.getObjectByName("LocationMesh");
@@ -24,6 +24,7 @@ export const RenderLocation = (scene: THREE.Scene, location: PageData) => {
     object.name = "LocationMesh"
     object.scale.x = -1;
 
-    scene.add( object );
+
+    scene.add(object);
   }
 }
