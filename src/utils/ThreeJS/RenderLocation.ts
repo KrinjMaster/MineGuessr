@@ -1,13 +1,7 @@
 import * as THREE from "three";
-import type { PageData } from "../routes/[mapId]/$types";
+import type { PageData } from "../../routes/[mapId]/$types";
 
 export const RenderLocation = (scene: THREE.Scene, location: PageData) => {
-  const prevArrow = scene.getObjectByName("LocationMesh");
-
-  if (prevArrow) {
-    scene.remove(prevArrow);
-  }
-
   if (location && location.image) {
     const object = new THREE.Mesh(
       new THREE.BoxGeometry( 5, 5, 5 ),
@@ -20,11 +14,10 @@ export const RenderLocation = (scene: THREE.Scene, location: PageData) => {
         new THREE.MeshLambertMaterial( { map: new THREE.TextureLoader().load(location.image[0]), side: THREE.BackSide } ),
       ]
     );
-
+      
     object.name = "LocationMesh"
     object.scale.x = -1;
-
-
+      
     scene.add(object);
   }
 }

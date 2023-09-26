@@ -16,8 +16,15 @@
   })
 
   const handleContinueGame = (map: string | null) => {
-    if (map) {
+    if (map && $gameParams.round) {
       $gameParams.isGuessed = false;
+      $gameParams.round = $gameParams.round++;
+
+      localStorage.setItem('game-params', JSON.stringify({
+        round: $gameParams.round++, 
+        totalRounds: $gameParams.totalRounds, 
+        map: $gameParams.map,
+      }))
     }
   }
 

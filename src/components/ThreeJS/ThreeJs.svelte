@@ -2,40 +2,30 @@
   import { onMount } from 'svelte'
   import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'
   import * as THREE from "three"
-  import { SVGRender } from '../../utils/SVGRender.ts'
-  import { RenderLocation } from '../../utils/RenderLocation.ts'
-  import { isLocationFetched, location, setNewLocation } from '../../stores/location/store.ts'
+  import { setNewLocation, location, isNeededToRefresh } from '../../stores/location/store.ts'
   import { gameParams } from '../../stores/params/store.ts'
-  import type { PageData } from '../../routes/[mapId]/$types'
+  import { RenderScene } from '../../utils/ThreeJS/RenderScene.ts'
+  import { ChangeLocation } from '../../utils/ThreeJS/ChangeLocation.ts'
 
   let intersects: THREE.Intersection<THREE.Mesh<THREE.ExtrudeGeometry, THREE.MeshBasicMaterial>>[] | [] = [];
   let hovered: THREE.Mesh<THREE.ExtrudeGeometry, THREE.MeshBasicMaterial> | null = null;
 
   const scene = new THREE.Scene();
-
-  const RenderScene = (scene: THREE.Scene, location: PageData) => {
-    RenderLocation(scene, location);
-
-    if (location.nearbyLocations && location.nearbyLocations.length > 0) {
-      SVGRender(location.nearbyLocations, scene);
-    }
-  }
   
-  $: if ($isLocationFetched) {
-    if ($location && $isLocationFetched) {
-      console.log('render2', $location.id)
-      RenderScene(scene, $location);
-      
-      isLocationFetched.set(false);
-    }
+  $: if ($isNeededToRefresh && $location) {
+    console.log('refresh')
+    ChangeLocation(scene, $location)
+
+    isNeededToRefresh.set(false);
   }
-  
+
   onMount(() => {
     if ($location && $location.id) {
-      console.log('render1', $location.id, scene.children)
       RenderScene(scene, $location);
     }
-
+  })
+  
+  onMount(() => {
     const camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 0.1, 1000 );
     const renderer = new THREE.WebGLRenderer();
     const raycaster = new THREE.Raycaster();

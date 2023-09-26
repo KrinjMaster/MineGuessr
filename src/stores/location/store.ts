@@ -3,7 +3,7 @@ import type { PageData } from '../../routes/[mapId]/$types.js'
 import { locationService } from '../../services/location.service.js';
 
 export const location: Writable<PageData | null> = writable(null);
-export const isLocationFetched: Writable<boolean> = writable(false);
+export const isNeededToRefresh: Writable<boolean> = writable(false);
 
 export function setLocation(data: PageData | null) {
   location.set(data);
@@ -21,7 +21,7 @@ export async function setNewLocation(id: string, map: string) {
       image: result.image.map((image) => locationService.getImageUrl(image, result)),
     });
 
-    isLocationFetched.set(true);
+    isNeededToRefresh.set(true);
   }
 } 
 

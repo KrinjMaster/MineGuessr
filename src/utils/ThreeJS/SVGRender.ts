@@ -1,21 +1,23 @@
 import * as THREE from "three";
 import { SVGLoader } from 'three/examples/jsm/loaders/SVGLoader';
-import type { NearbyLocation } from "../types/Locations";
+import type { NearbyLocation } from "../../types/Locations";
 
-export const SVGRender = (locations: NearbyLocation[] | undefined, scene: THREE.Scene) => {
+export const SVGRender = (scene: THREE.Scene, locations: NearbyLocation[] | undefined) => {
   const loader = new SVGLoader();
 
   for (let i = 0; i < scene.children.length; i++) {
     const object = scene.children[i];
     if (object.name === 'arrow_group') {
+      console.log('deleted arrow')
       scene.remove(object);
     }
   }
-
+  
   for (let i = 0; i < scene.children.length; i++) {
     const object = scene.children[i];
-
+    
     if (object.name === 'arrow_group') {
+      console.log('deleted arrow')
       scene.remove(object);
     }
   }
