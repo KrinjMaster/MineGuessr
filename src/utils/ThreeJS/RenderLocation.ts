@@ -14,7 +14,7 @@ export const RenderLocation = (scene: THREE.Scene, location: PageData) => {
         new THREE.MeshLambertMaterial( { map: new THREE.TextureLoader().load(location.image[0]), side: THREE.BackSide } ),
       ]
     );
-      
+
     object.name = "LocationMesh"
     object.scale.x = -1;
       

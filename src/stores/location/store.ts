@@ -36,5 +36,7 @@ export async function setNewRandomLocation(map: string) {
       nearbyLocations: result.expand ? result.expand.nearbyLocations : [],
       image: result.image.map((image) => locationService.getImageUrl(image, result)),
     });
+
+    isNeededToRefresh.set(true);
   }
 } 

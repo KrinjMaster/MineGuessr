@@ -10,34 +10,28 @@ import Vector from 'ol/source/Vector';
 import Icon from 'ol/style/Icon';
 import Style from 'ol/style/Style';
 import VectorLayer from 'ol/layer/Vector';
-import { olConfig } from '../../stores/ol/store.ts';
-import { get } from 'svelte/store'
-import type { Marker } from './ol.ts';
-import { location } from '../../stores/location/store.ts';
+import type { Marker, MarkersConfig } from './ol.ts';
 import type { PageData } from '../../routes/[mapId]/$types.d.ts';
 import Stroke from 'ol/style/Stroke';
 import Fill from 'ol/style/Fill';
 
-const OlConfig = get(olConfig)
+const ResultOLmap = (id: string, regions: any, location: PageData | null, markers: MarkersConfig) => {
+  const options = {
+    minZoom: 0,
+    maxZoom: 2,
+    defaultZoom: 0,
+    imageFormat: "jpeg",
+    minRegionX: -4,
+    minRegionZ: -4,
+    maxRegionX: 3,
+    maxRegionZ: 3,
+    worldName: "SP1",
+    background: "",
+    markers: markers,
+  }
 
-const options = {
-  minZoom: 0,
-  maxZoom: 2,
-  defaultZoom: 0,
-  imageFormat: "jpeg",
-  minRegionX: -4,
-  minRegionZ: -4,
-  maxRegionX: 3,
-  maxRegionZ: 3,
-  worldName: "SP1",
-  background: "",
-  markers: OlConfig,
-}
-
-
-const ResultOLmap = (id: string, regions: any, location: PageData | null) => {
-  if (OlConfig && location && location.cords) {
-    const expandedMarkers = [...OlConfig.markers, {
+  if (markers && location && location.cords) {
+    const expandedMarkers = [...markers.markers, {
       x: location.cords.x,
       z: location.cords.z,
       image: "/src/lib/icons/flag.png",
@@ -45,7 +39,7 @@ const ResultOLmap = (id: string, regions: any, location: PageData | null) => {
       imageScale: 0.5,
     }]
   
-    OlConfig.markers = expandedMarkers;
+    markers.markers = expandedMarkers;
   }
 
   const dpiScale = window.devicePixelRatio ?? 1.0;
@@ -171,7 +165,7 @@ const ResultOLmap = (id: string, regions: any, location: PageData | null) => {
       }),
     ],
     view: new View({
-      center: OlConfig?.markers ? fromLonLat([OlConfig?.markers[0].x, -OlConfig?.markers[0].z], viewProjection) : [0, 0],
+      center: markers?.markers ? fromLonLat([markers?.markers[0].x, -markers?.markers[0].z], viewProjection) : [0, 0],
       extent: mapExtent,
       projection: viewProjection,
       resolutions: tileGrid.getResolutions(),
@@ -221,9 +215,9 @@ const ResultOLmap = (id: string, regions: any, location: PageData | null) => {
     return vectorLayer;
   }
 
-  if (OlConfig?.markers) {
-    const guess = new Point([OlConfig?.markers[0].x, -OlConfig?.markers[0].z]);
-    const loc = new Point([OlConfig?.markers[1].x, -OlConfig?.markers[1].z]);
+  if (markers?.markers) {
+    const guess = new Point([markers?.markers[0].x, -markers?.markers[0].z]);
+    const loc = new Point([markers?.markers[1].x, -markers?.markers[1].z]);
   
     const line = new LineString([loc.getCoordinates(),guess.getCoordinates()]);
 
@@ -250,8 +244,8 @@ const ResultOLmap = (id: string, regions: any, location: PageData | null) => {
     map.addLayer(vectorLayer);
   }
   
-  if (OlConfig?.markers) {
-    const markersLayer = createMarkersLayer(OlConfig.markers, dataProjection, viewProjection);
+  if (markers?.markers) {
+    const markersLayer = createMarkersLayer(markers.markers, dataProjection, viewProjection);
 
     markersLayer.set('name', 'markers');
 

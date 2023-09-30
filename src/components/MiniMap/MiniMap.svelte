@@ -11,13 +11,21 @@
   import { getLength } from 'ol/sphere'
   import { setGameParams, gameParams } from '../../stores/params/store.ts'
   import { t } from '../../lib/lang';
+  import { Map } from 'ol'
+
+  let map: Map | null = null;
+
+  $: if ($gameParams.round && map) {
+    const verctorLayer = map.getAllLayers()[1]
+    map.removeLayer(verctorLayer);
+  }
 
   onMount(() => {
-    OLmap('map', Regions);
+    map = OLmap('map_main', Regions, $olConfig)
   })
 
   const handleGuessLocation = (param: Marker | undefined, location: PageData | null) => {
-    if (param && location?.cords) {
+    if (param && location?.cords && $olConfig && $gameParams.round) {
       const guess = new Point([param.x, param.z]);
       const loc = new Point([location.cords.x, location.cords.z]);
 
@@ -28,7 +36,8 @@
   }
 </script>
 
-<div class="absolute flex flex-col gap-2.5 bottom-0 right-0 h-96 w-96 p-2.5 hover:h-[35rem] hover:w-[35rem] transition-all duration-150 ease-linear z-[100]">
-  <div id="map" class="w-full h-full bg-white"></div>
+<div class="absolute flex flex-col gap-2.5 bottom-0 right-0 h-96 w-96 p-2.5 hover:h-[35rem] hover:w-[35rem] transition-all duration-150 ease-linear z-[20]">
+  <div id="map_main" class="w-full h-full bg-white"></div>
   <button class="btn btn-secondary" on:click={() => handleGuessLocation($olConfig?.markers[0], $location)}>{$t('game.guess-button')}</button>
 </div>
+

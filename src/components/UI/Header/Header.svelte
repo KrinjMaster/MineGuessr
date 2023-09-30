@@ -6,6 +6,7 @@
   import { onMount } from 'svelte'
   import { t, locales, setLocale  } from '../../../lib/lang';
   import { gameParams } from '../../../stores/params/store'
+  import { page } from '$app/stores';
 
   let isHUDShown = false;
 
@@ -19,19 +20,17 @@
     document.cookie = `lang=${value} ; HttpOnly; Secure; SameSite=lax`;
   };
 
-  onMount(() => {
-    if ($gameParams.round) {
-      isHUDShown = true;
-    } else {
-      isHUDShown = false;
-    }
-  })
+  $: if ($page.url.pathname === '/') {
+    isHUDShown = false;
+  } else {
+    isHUDShown = true;
+  }
 
 </script>
 
-<div class="navbar flex items-center justify-between bg-base-100 bg-opacity-25 fixed backdrop-blur-3xl text-white px-5">
+<div class="navbar flex items-center justify-between bg-base-100 bg-opacity-25 fixed backdrop-blur-3xl text-white px-5 z-[100]">
   <a class="font-extrabold text-3xl" href="/">MineGuessr</a>
-  {#if $gameParams.round}
+  {#if isHUDShown}
     <div class="flex gap-3.5 font-bold">
       <div class="flex flex-col items-center">
         <h1>Map</h1>
@@ -43,7 +42,7 @@
       </div>
       <div class="flex flex-col items-center">
         <h1>Points</h1>
-        <p>1000</p>
+        <p>0</p>
       </div>
     </div>
   {/if}

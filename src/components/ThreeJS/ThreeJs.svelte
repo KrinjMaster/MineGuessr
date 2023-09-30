@@ -12,20 +12,17 @@
 
   const scene = new THREE.Scene();
   
-  $: if ($isNeededToRefresh && $location) {
-    console.log('refresh')
+  $: if ($location && $isNeededToRefresh) {
     ChangeLocation(scene, $location)
 
     isNeededToRefresh.set(false);
   }
-
+  
   onMount(() => {
     if ($location && $location.id) {
       RenderScene(scene, $location);
     }
-  })
-  
-  onMount(() => {
+
     const camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 0.1, 1000 );
     const renderer = new THREE.WebGLRenderer();
     const raycaster = new THREE.Raycaster();
@@ -58,7 +55,7 @@
       if (camera.fov + scroll < 75 && camera.fov + scroll > 10) {
         camera.fov += scroll
         controls.rotateSpeed = camera.fov / 225
-
+        
         camera.updateProjectionMatrix();
       }
     });
@@ -69,7 +66,7 @@
       
       renderer.setSize( window.innerWidth, window.innerHeight );
     }, false );
-
+    
     document.addEventListener('mousemove', (e) => {
       mouse.set((e.clientX / window.innerWidth) * 2 - 1, -(e.clientY / window.innerHeight) * 2 + 1)
       raycaster.setFromCamera(mouse, camera)
@@ -100,7 +97,7 @@
       
       renderer.render( scene, camera );
     }
-    
+
     animate();
   })
 </script>

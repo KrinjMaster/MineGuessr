@@ -10,10 +10,7 @@ import Vector from 'ol/source/Vector';
 import Icon from 'ol/style/Icon';
 import Style from 'ol/style/Style';
 import VectorLayer from 'ol/layer/Vector';
-import { olConfig } from '../../stores/ol/store.ts';
-import { get } from 'svelte/store'
 import type { Region } from './ol.regions'
-
 export interface Marker {
   x: number;
   z: number;
@@ -28,23 +25,21 @@ export interface MarkersConfig {
 }
 
 
-const OlConfig = get(olConfig)
+const OLmap = (id: string, regions: Region[], markers: MarkersConfig | null) => {
+  const options = {
+    minZoom: 0,
+    maxZoom: 2,
+    defaultZoom: 0,
+    imageFormat: "jpeg",
+    minRegionX: -4,
+    minRegionZ: -4,
+    maxRegionX: 3,
+    maxRegionZ: 3,
+    worldName: "SP1",
+    background: "",
+    markers: markers,
+  }
 
-const options = {
-  minZoom: 0,
-  maxZoom: 2,
-  defaultZoom: 0,
-  imageFormat: "jpeg",
-  minRegionX: -4,
-  minRegionZ: -4,
-  maxRegionX: 3,
-  maxRegionZ: 3,
-  worldName: "SP1",
-  background: "",
-  markers: OlConfig,
-}
-
-const OLmap = (id: string, regions: Region[]) => {
   const dpiScale = window.devicePixelRatio ?? 1.0;
 
   const worldMinX = options.minRegionX * 512;
@@ -223,7 +218,7 @@ const OLmap = (id: string, regions: Region[]) => {
       }
     });
     
-    OlConfig ? OlConfig.markers[0] = {
+    markers ? markers.markers[0] = {
       x: evt.coordinate[0],
       z: -evt.coordinate[1],
       image: "/src/lib/icons/custom.pin.png",
@@ -231,7 +226,7 @@ const OLmap = (id: string, regions: Region[]) => {
       imageScale: 0.5,
     } : null;
 
-    const markersLayer = createMarkersLayer(OlConfig?.markers, dataProjection, viewProjection);
+    const markersLayer = createMarkersLayer(markers?.markers, dataProjection, viewProjection);
 
     markersLayer.set('name', 'guess_marker');
 

@@ -3,8 +3,8 @@
   import ResultScreen from "../../components/ResultScreen/ResultScreen.svelte"
   import ThreeJs from "../../components/ThreeJS/ThreeJs.svelte";
   import { setLocation } from "../../stores/location/store.ts"
-  import { gameParams } from "../../stores/params/store.ts"
   import { page } from '$app/stores';
+  import { gameParams } from "../../stores/params/store.ts"
 
   export let data;
 
@@ -13,7 +13,6 @@
 
 {#if $gameParams.isGuessed}
   <ResultScreen map={$page.params.mapId}/>
-{:else}
-  <MiniMap />
-  <ThreeJs />
 {/if}
+<MiniMap />
+<ThreeJs />
