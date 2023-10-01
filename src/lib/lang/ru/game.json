@@ -1,5 +1,10 @@
 {
   "guess-button": "Ответить!",
   "result-title": "Результат",
-  "result-subheader": "метров от места"
+  "result-subheader": "метров от места",
+  "sp1_title": "СП1",
+  "game-options-title": "Опции игры",
+  "rounds-title": "Раунды",
+  "time-limit-title": "Время (минуты)",
+  "start-game-title": "Начать игру"
 }

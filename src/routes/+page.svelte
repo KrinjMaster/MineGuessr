@@ -1,6 +1,6 @@
 <script lang="ts">
   import Modals from '../components/MapModals/Modals.svelte'
-import { t } from '../lib/lang';
+  import { t } from '../lib/lang';
 
   const handleOpenModal = (id: string) => {
     if (document) {

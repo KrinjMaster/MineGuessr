@@ -6,6 +6,7 @@ interface Store {
   totalRounds: number | null;
   distance: number | null;
   map: string | null;
+  points: number | null;
 }
 
 export const gameParams: Writable<Store> = writable({
@@ -14,6 +15,7 @@ export const gameParams: Writable<Store> = writable({
   totalRounds: null,
   map: null,
   distance: null,
+  points: 0,
 }); 
 
 export function setGameParams(data: Store) {
@@ -33,6 +35,7 @@ export function setGameParamsFromLS() {
         round: GameParams.round,
         totalRounds: GameParams.totalRounds,
         map: GameParams.map,
+        points: GameParams.points,
       })
     }
   }
