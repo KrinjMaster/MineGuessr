@@ -1,10 +1,13 @@
 {
   "guess-button": "Ответить!",
-  "result-title": "Результат",
+  "result-title": "Раунд",
   "result-subheader": "метров от места",
   "sp1_title": "СП1",
   "game-options-title": "Опции игры",
   "rounds-title": "Раунды",
   "time-limit-title": "Время (минуты)",
-  "start-game-title": "Начать игру"
+  "start-game-title": "Начать игру",
+  "continue-game-title": "Продолжить игру",
+  "end-game-title": "Завершить игру",
+  "score-title": "очков"
 }

@@ -1,7 +1,6 @@
 import type { Location } from "../types/Locations";
 import { pb } from "./api";
 
-pb.autoCancellation(false);
 class LocationService {
   async getLocation(id: string, collection: string): Promise<Location | undefined> {
     return await pb.collection(`${collection}_locations`).getOne(id, {

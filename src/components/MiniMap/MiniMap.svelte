@@ -16,8 +16,10 @@
   let map: Map | null = null;
 
   $: if ($gameParams.round && map) {
-    const verctorLayer = map.getAllLayers()[1]
-    map.removeLayer(verctorLayer);
+    for (let i = 1; i < map.getAllLayers().length; i++) {
+      const verctorLayer = map.getAllLayers()[i]
+      map.removeLayer(verctorLayer);
+    }
   }
 
   onMount(() => {

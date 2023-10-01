@@ -1,5 +1,8 @@
 {
   "theme": "Theme",
   "theme-light": "Light",
-  "theme-dark": "Dark"
+  "theme-dark": "Dark",
+  "map-title": "Map",
+  "round-title": "Round",
+  "points-title": "Points"
 }

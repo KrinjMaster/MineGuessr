@@ -3,14 +3,19 @@
 <!-- svelte-ignore a11y-no-noninteractive-tabindex -->
 
 <script lang="ts">
-  import { t, locales, setLocale  } from '../../../lib/lang';
+  import { t, locales, setLocale } from '../../../lib/lang';
   import { gameParams, setGameParams } from '../../../stores/params/store'
   import { page } from '$app/stores';
   import { goto } from '$app/navigation'
   import { location } from '../../../stores/location/store'
-  import Icon from '@iconify/svelte';
+  import { themes } from '$lib/data'
 
   let isInGame = false;
+  let mapTitle = '';
+
+  $: if ($t(`game.${$gameParams.map}_title`)) {
+    mapTitle = $t(`game.${$gameParams.map}_title`)
+  }
 
   $: if ($page.url.pathname === '/') {
     isInGame = false;
@@ -55,15 +60,15 @@
   {#if isInGame}
     <div class="flex gap-3.5 font-bold">
       <div class="flex flex-col items-center">
-        <h1>Map</h1>
-        <p>#{$gameParams.map?.toUpperCase()}</p>
+        <h1>{$t('menu.map-title')}</h1>
+        <p>#{mapTitle}</p>
       </div>
       <div class="flex flex-col items-center">
-        <h1>Round</h1>
+        <h1>{$t('menu.round-title')}</h1>
         <p>{$gameParams.round}/{$gameParams.totalRounds}</p>
       </div>
       <div class="flex flex-col items-center">
-        <h1>Points</h1>
+        <h1>{$t('menu.points-title')}</h1>
         <p>{$gameParams.points}</p>
       </div>
     </div>
@@ -85,8 +90,9 @@
     <div class="dropdown dropdown-hover dropdown-end">
       <label tabindex="0" class={`m-1 btn btn-outline ${isInGame ? 'btn-neutral' : 'btn-secondary'}`}>{$t('menu.theme')}</label>
       <ul tabindex="0" class="dropdown-content z-[1] menu menu-lg p-2 shadow bg-base-200 rounded-box w-fit gap-1.5">
-        <button class="btn hover:bg-base-100" data-toggle-theme="light">{$t('menu.theme-light')}</button>
-        <button class="btn hover:bg-base-100" data-toggle-theme="dark">{$t('menu.theme-dark')}</button>
+        {#each themes as theme}
+          <button class="btn hover:bg-base-100" data-set-theme={theme.id}>{$t(`menu.theme-${theme.id}`)}</button>
+        {/each}
       </ul>
     </div>
     <!-- github logo -->
