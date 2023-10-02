@@ -64,7 +64,7 @@ export const SVGRender = (scene: THREE.Scene, locations: NearbyLocation[] | unde
               mesh.scale.y = 0.01;
               mesh.scale.z = 0.01;
 
-              mesh.position.y -= 0.2;
+              mesh.position.y -= 0.25;
               mesh.position.x = x;
               mesh.position.z = z;
 

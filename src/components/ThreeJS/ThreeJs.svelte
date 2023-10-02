@@ -7,7 +7,7 @@
   import { RenderScene } from '../../utils/ThreeJS/RenderScene.ts'
   import { ChangeLocation } from '../../utils/ThreeJS/ChangeLocation.ts'
 
-  let intersects: THREE.Intersection<THREE.Mesh<THREE.ExtrudeGeometry, THREE.MeshBasicMaterial>>[] | [] = [];
+  let intersects: THREE.Mesh<THREE.ExtrudeGeometry, THREE.MeshBasicMaterial>[] | [] = [];
   let hovered: THREE.Mesh<THREE.ExtrudeGeometry, THREE.MeshBasicMaterial> | null = null;
 
   const scene = new THREE.Scene();
@@ -20,6 +20,7 @@
   
   onMount(() => {
     if ($location && $location.id) {
+      console.log('mount')
       RenderScene(scene, $location);
     }
 
@@ -43,10 +44,10 @@
     
     scene.add( light );
     
-    const handleArrowClick = (object: THREE.Mesh) => {
-      if ($gameParams.map) {
-        setNewLocation(object.userData.locationId, $gameParams.map);
-      }
+    const handleArrowClick = (object: THREE.Mesh, map: string) => {
+      setNewLocation(object.userData.locationId, map);
+      intersects = []
+      hovered = null;
     };
     
     document.getElementsByTagName('canvas').item(0)?.addEventListener( 'wheel', (event) => {
@@ -70,22 +71,25 @@
     document.addEventListener('mousemove', (e) => {
       mouse.set((e.clientX / window.innerWidth) * 2 - 1, -(e.clientY / window.innerHeight) * 2 + 1)
       raycaster.setFromCamera(mouse, camera)
-      intersects = raycaster.intersectObjects(scene.children, true)
-      
+
+      const raycasterArray: THREE.Intersection<THREE.Mesh<THREE.ExtrudeGeometry, THREE.MeshBasicMaterial>>[] = raycaster.intersectObjects(scene.children, true)
+
       if (hovered) {
         hovered.material.color.set(1,1,1);
       }
-      
-      if (intersects[0] && intersects[0].object.name === 'arrow') {
-        intersects[0].object.material.color.set('#ad69fa')
-        hovered = intersects[0].object;
+
+      if (raycasterArray[0].object.name === "arrow") {
+        raycasterArray[0].object.material.color.set('#ad69fa')
+        hovered = raycasterArray[0].object;
+      } else {
+        hovered = null;
       }
     })
     
     window.addEventListener('click', () => {
-      if (intersects[0]) {
-        if (intersects[0].object.name === 'arrow') {
-          handleArrowClick(intersects[0].object);
+      if (hovered) {
+        if (hovered.name === 'arrow' && $gameParams.map) {
+          handleArrowClick(hovered, $gameParams.map);
         }
       }
     })
