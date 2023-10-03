@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { onMount } from 'svelte'
   import Modals from '../components/MapModals/Modals.svelte'
   import { t } from '../lib/lang';
 
@@ -10,6 +11,8 @@
       }
     }
   }
+
+  onMount(() => console.log(document.getElementsByTagName('canvas').item(0)))
 </script>
 
 <section class="h-screen w-screen flex flex-col items-center justify-center">

@@ -14,16 +14,15 @@
   
   $: if ($location && $isNeededToRefresh) {
     ChangeLocation(scene, $location)
-
+    
     isNeededToRefresh.set(false);
   }
   
   onMount(() => {
     if ($location && $location.id) {
-      console.log('mount')
       RenderScene(scene, $location);
     }
-
+    const container = document.getElementById('map')
     const camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 0.1, 1000 );
     const renderer = new THREE.WebGLRenderer();
     const raycaster = new THREE.Raycaster();
@@ -100,8 +99,12 @@
       controls.update();
       
       renderer.render( scene, camera );
+
+      container?.appendChild(renderer.domElement)
     }
 
     animate();
   })
 </script>
+
+<div id='map'></div>

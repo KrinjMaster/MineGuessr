@@ -48,7 +48,7 @@
 
       localStorage.removeItem('gape-params')
       $location = null;
-  
+
       goto('/')
     }
   }

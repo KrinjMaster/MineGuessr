@@ -12,7 +12,7 @@
 </script>
 
 {#if $gameParams.isGuessed}
-  <ResultScreen map={$page.params.mapId}/>
+  <ResultScreen map={$page.params.mapId} />
 {/if}
 <MiniMap />
 <ThreeJs />
