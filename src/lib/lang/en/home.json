@@ -1,6 +1,6 @@
 {
   "title": "An interactive minecraft themed location guessing game.",
-  "test-map-title": "Test map",
-  "test-map-description": "Map for testing the engine and add new features.",
+  "sp1-map-title": "#SP1",
+  "sp1-map-description": "First season of the #SP project.",
   "start-button": "Start game"
 }

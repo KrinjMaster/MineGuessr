@@ -1,10 +1,10 @@
 <script>
-  import { onMount } from 'svelte'
-  import { themeChange } from 'theme-change'
+  import { onMount } from "svelte"
+  import { themeChange } from "theme-change"
   import "../styles/app.css";
   import Header from "../components/UI/Header/Header.svelte";
-  import WebGL from 'three/examples/jsm/capabilities/WebGL.js';
-  import { setGameParamsFromLS } from '../stores/params/store'
+  import WebGL from "three/examples/jsm/capabilities/WebGL.js";
+  import { setGameParamsFromLS } from "../stores/params/store"
   
   onMount(() => {
     if ( WebGL.isWebGLAvailable() ) {

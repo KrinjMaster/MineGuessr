@@ -1,7 +1,7 @@
 <script lang="ts">
-  import { onMount } from 'svelte'
-  import Modals from '../components/MapModals/Modals.svelte'
-  import { t } from '../lib/lang';
+  import { onMount } from "svelte"
+  import Modals from "../components/MapModals/Modals.svelte"
+  import { t } from "../lib/lang";
 
   const handleOpenModal = (id: string) => {
     if (document) {
@@ -12,21 +12,21 @@
     }
   }
 
-  onMount(() => console.log(document.getElementsByTagName('canvas').item(0)))
+  onMount(() => console.log(document.getElementsByTagName("canvas").item(0)))
 </script>
 
 <section class="h-screen w-screen flex flex-col items-center justify-center">
   <h1 class="font-extrabold text-8xl">MineGuessr</h1>
-  <p class="text-xl">{$t('home.title')}</p>
+  <p class="text-xl">{$t("home.title")}</p>
   <!-- maps selection -->
   <div class="h-fit w-full flex justify-center items-start p-10">
     <div class="card flex flex-col items-center justify-between gap-5 w-96 h-96 p-3">
       <div class="flex flex-col w-full text-start">
-        <h1 class="text-5xl font-extrabold">{$t('home.test-map-title')}</h1>
-        <p>{$t('home.test-map-description')}</p>
+        <h1 class="text-5xl font-extrabold">{$t("home.sp1-map-title")}</h1>
+        <p>{$t("home.sp1-map-description")}</p>
       </div>
       <span class="w-full h-full bg-gray-500 rounded-xl"/>
-      <button class="btn btn-secondary btn-outline w-full text-white text-xl" on:click={()=> handleOpenModal('sp1_modal')}>{$t('home.start-button')}</button>
+      <button class="btn btn-secondary btn-outline w-full text-white text-xl" on:click={()=> handleOpenModal("sp1_modal")}>{$t("home.start-button")}</button>
     </div>
   </div>
   <!-- blobs -->

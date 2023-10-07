@@ -10,20 +10,7 @@ import Vector from 'ol/source/Vector';
 import Icon from 'ol/style/Icon';
 import Style from 'ol/style/Style';
 import VectorLayer from 'ol/layer/Vector';
-import type { Region } from './ol.regions'
-export interface Marker {
-  x: number;
-  z: number;
-  image: string;
-  imageAnchor: number[];
-  imageScale: number;
-}
-
-export interface MarkersConfig {
-  isEnabled: boolean;
-  markers: Marker[]
-}
-
+import type { MarkersConfig, Region } from '../../types/OL'
 
 const OLmap = (id: string, regions: Region[], markers: MarkersConfig | null) => {
   const options = {

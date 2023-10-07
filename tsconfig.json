@@ -14,6 +14,6 @@
 		],
 		"sourceMap": true,
 		"importsNotUsedAsValues":"remove",
-		"strict": true
-	}
+		"strict": true,
+	},
 }
