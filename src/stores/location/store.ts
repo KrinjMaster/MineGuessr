@@ -2,11 +2,11 @@ import { writable, type Writable } from 'svelte/store';
 import type { PageData } from '../../routes/[mapId]/$types.js'
 import { locationService } from '../../services/location.service.js';
 
-export const location: Writable<PageData | null> = writable(null);
+export const useLocation: Writable<PageData | null> = writable(null);
 export const isNeededToRefresh: Writable<boolean> = writable(false);
 
 export function setLocation(data: PageData | null) {
-  location.set(data);
+  useLocation.set(data);
 }
 
 export async function setNewLocation(id: string, map: string) {
@@ -15,7 +15,7 @@ export async function setNewLocation(id: string, map: string) {
   if (result && window) {
     localStorage.setItem('location', result.id)
 
-    location.set({
+    useLocation.set({
       ...result,
       nearbyLocations: result.expand ? result.expand.nearbyLocations : [],
       image: result.image.map((image) => locationService.getImageUrl(image, result)),
@@ -31,7 +31,7 @@ export async function setNewRandomLocation(map: string) {
   if (result && window) {
     localStorage.setItem('location', result.id)
 
-    location.set({
+    useLocation.set({
       ...result,
       nearbyLocations: result.expand ? result.expand.nearbyLocations : [],
       image: result.image.map((image) => locationService.getImageUrl(image, result)),

@@ -3,9 +3,9 @@
   import { Regions } from "../../utils/OL/ol.regions"
   import ResultOLmap from "../../utils/OL/result.ol"
   import { gameParams, setGameParams } from "../../stores/params/store"
-  import { location, setNewRandomLocation } from "../../stores/location/store.ts"
+  import { useLocation, setNewRandomLocation } from "../../stores/location/store.ts"
   import { t } from "../../lib/lang"
-  import { olConfig } from "../../stores/ol/store.ts"
+  import { useOl } from "../../stores/ol/store.ts"
   import { goto } from "$app/navigation"
   import { getRoundPoints } from "../../utils/getRounPoints.ts"
   
@@ -15,12 +15,12 @@
   let screenPoints: number = 0;
 
   onMount(() => {
-    if ($olConfig && $gameParams.distance) {
+    if ($useOl && $gameParams.distance) {
       1500 - $gameParams.distance - 25 > 0 ? percent = (1500 - $gameParams.distance + 25) * 100 / 1500 : percent = 0
       
       Math.round(percent / 100 * 5000) <= 5000 ? $gameParams.points = Math.round(percent / 100 * 5000) : $gameParams.points = 5000
 
-      ResultOLmap("map_result", Regions, $location, $olConfig)
+      ResultOLmap("map_result", Regions, $useLocation, $useOl)
     
       localStorage.removeItem("location")
       setNewRandomLocation(map);
@@ -40,9 +40,9 @@
   })
 
   const handleContinueGame = (map: string | null) => {
-    if (map && $gameParams.round && $olConfig) {
+    if (map && $gameParams.round && $useOl) {
       $gameParams.isGuessed = false;
-      $olConfig.markers = []
+      $useOl.markers = []
       $gameParams.round = $gameParams.round++;
       
       localStorage.setItem("game-params", JSON.stringify({  
@@ -54,7 +54,7 @@
   }
   
   const handleGoBack = () => {
-    if ($olConfig?.markers) {
+    if ($useOl?.markers) {
       setGameParams({
         isGuessed: false,
         round: null,
@@ -64,8 +64,8 @@
         points: 0,
       })
       
-      $location = null;
-      $olConfig.markers = []
+      $useLocation = null;
+      $useOl.markers = []
       localStorage.removeItem("game-params")
       
       goto("/")

@@ -2,7 +2,7 @@
   import { onMount } from "svelte"
   import { OrbitControls } from "three/examples/jsm/controls/OrbitControls"
   import * as THREE from "three"
-  import { setNewLocation, location, isNeededToRefresh } from "../../stores/location/store.ts"
+  import { setNewLocation, useLocation, isNeededToRefresh } from "../../stores/location/store.ts"
   import { gameParams } from "../../stores/params/store.ts"
   import { RenderScene } from "../../utils/ThreeJS/RenderScene.ts"
   import { ChangeLocation } from "../../utils/ThreeJS/ChangeLocation.ts"
@@ -12,15 +12,16 @@
 
   const scene = new THREE.Scene();
   
-  $: if ($location && $isNeededToRefresh) {
-    ChangeLocation(scene, $location)
+  // fix passing store to function
+  $: if ($useLocation && $isNeededToRefresh) {
+    ChangeLocation(scene, $useLocation)
     
     isNeededToRefresh.set(false);
   }
   
   onMount(() => {
-    if ($location && $location.id) {
-      RenderScene(scene, $location);
+    if ($useLocation && $useLocation.id) {
+      RenderScene(scene, $useLocation);
     }
     const container = document.getElementById("map")
     const camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 0.1, 1000 );

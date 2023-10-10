@@ -1,5 +1,5 @@
-import type { Location } from "../types/Locations";
-import { pb } from "./api";
+import type { Location } from '../types/Locations';
+import { pb } from './api';
 
 class LocationService {
   async getLocation(id: string, collection: string): Promise<Location | undefined> {

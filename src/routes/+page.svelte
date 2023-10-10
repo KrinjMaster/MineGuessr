@@ -2,6 +2,7 @@
   import { onMount } from "svelte"
   import Modals from "../components/MapModals/Modals.svelte"
   import { t } from "../lib/lang";
+  import { useUser } from "../stores/user"
 
   const handleOpenModal = (id: string) => {
     if (document) {
@@ -11,6 +12,8 @@
       }
     }
   }
+
+  $: console.log($useUser)
 
   onMount(() => console.log(document.getElementsByTagName("canvas").item(0)))
 </script>
