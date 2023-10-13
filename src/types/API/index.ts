@@ -1,10 +1,9 @@
 export interface LoginResponse {
-  avatarUrl: string;
   email: string;
+  family_name: string;
+  given_name: string;
   id: string;
+  locale: string;
   name: string;
-  // rawUser: {
-  //   locale: string;
-  // }
-  username: string;
+  picture: string;
 }

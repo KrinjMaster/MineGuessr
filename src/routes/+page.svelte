@@ -12,10 +12,6 @@
       }
     }
   }
-
-  $: console.log($useUser)
-
-  onMount(() => console.log(document.getElementsByTagName("canvas").item(0)))
 </script>
 
 <section class="h-screen w-screen flex flex-col items-center justify-center">
