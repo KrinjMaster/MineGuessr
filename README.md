@@ -9,6 +9,6 @@
 _Tasks to achieve:_<br/>
 ***[✅] Make an interactive map***<br/>
 ***[✅] Make a mini map for guessing***<br/>
-***[❌] Make an user profile***<br/>
+***[✅] Make an user profile***<br/>
 ***[❌] Add multiple maps***<br/>
 ***[❌] Add multiplayer***<br/>
