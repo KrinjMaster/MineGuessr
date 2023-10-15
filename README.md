@@ -1,6 +1,7 @@
 # MineGuessr 
 
 **A minecraft world guess the location game!!**
+( dev become less enthusiastic so for now it's abandoned )
 
 ## At the moment development is in early alpha stage.
 **Stay tuned for updates!! 🥳**
