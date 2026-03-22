@@ -1,14 +1,16 @@
-# MineGuessr 
+# Mineguessr
 
-**A minecraft world guess the location game!!**
-( dev become less enthusiastic so for now it's abandoned )
+A GeoGuessr-style game set inside Minecraft. Built with Svelte and Three.js.
 
-## At the moment development is in early alpha stage.
-**Stay tuned for updates!! 🥳**
+🎮 Live: [your-link-here]
 
-_Tasks to achieve:_<br/>
-***[✅] Make an interactive map***<br/>
-***[✅] Make a mini map for guessing***<br/>
-***[✅] Make an user profile***<br/>
-***[❌] Add multiple maps***<br/>
-***[❌] Add multiplayer***<br/>
+## How it works
+You're dropped into a 3D Minecraft-style scene rendered with Three.js.
+Guess the location on a map. The closer you are, the more points you get.
+
+## Stack
+Svelte · Three.js · PocketBase (auth + leaderboard)
+
+## Run locally
+npm install
+npm run dev
